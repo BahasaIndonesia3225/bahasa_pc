@@ -42,12 +42,25 @@
             <el-radio :label="1">开启</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="设备限制数量" prop="deviceLimitNum">
+        <el-form-item label="设备限制" prop="deviceLimitNum">
           <el-input-number
             size="small"
             v-model="form.deviceLimitNum"
             :min="1" :max="10"
           ></el-input-number>
+        </el-form-item>
+        <el-form-item label="手机号码" prop="phone">
+          <el-input
+            readonly
+            v-model="form.phone"
+            size="small">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="开通进阶课" prop="userType">
+          <el-radio-group v-model="form.userType" size="mini">
+            <el-radio :label="0">关闭</el-radio>
+            <el-radio :label="1">开启</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -62,9 +75,11 @@
         <th>id</th>
         <th>用户名</th>
         <th>昵称</th>
+        <th>手机号码</th>
         <th>角色</th>
         <th>支付状态</th>
         <th>是否需要答题</th>
+        <th>是否开通进阶课</th>
         <th>设备限制</th>
         <th>注册时间</th>
         <th>操作</th>
@@ -76,10 +91,18 @@
         <td>{{member.id}}</td>
         <td>{{member.mobile}}</td>
         <td>{{member.name}}</td>
+        <td>{{member.phone || '未绑定'}}</td>
         <td>{{member.role === 1 ? '普通用户' : '超级用户'}}</td>
         <td>{{member.payStatus && member.payStatus === 1 ? "已支付" : "未支付"}}</td>
         <td>
           <el-tag size="mini" :type="member.doQuestion === 1 ? 'unset' : 'info'">{{member.doQuestion === 1 ? '是' : '否'}}</el-tag>
+        </td>
+        <td>
+          <el-tag
+            size="mini"
+            :type="member.userType === 1 ? 'unset' : 'info'">
+            {{member.userType === 1 ? '是' : '否'}}
+          </el-tag>
         </td>
         <td>{{member.deviceLimitNum}}</td>
         <td>{{member.registerTime}}</td>
@@ -154,7 +177,10 @@
           role: 1,           //角色
           payStatus: 0,      //支付状态
           doQuestion: 1,     //是否需要答题
-          deviceLimitNum: 2  //设备限制数量
+          deviceLimitNum: 2, //设备限制数量
+          choice: '',        //用户选择的习题
+          phone: '',         //手机号码
+          userType: ''       //进阶课
         },
         rules: {
           mobile: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -186,7 +212,7 @@
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/member/list', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/list', {
           page: page,
           size: _this.$refs.pagination.size,
           mobile: this.mobile,
@@ -199,7 +225,7 @@
         })
       },
       exportMember() {
-        this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/member/export', {}, {
+        this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/export', {}, {
           headers: {
             'Content-Type': 'application/json; application/octet-stream'
           },
@@ -224,7 +250,9 @@
           role: 1,       //角色
           payStatus: 0,  //支付状态
           doQuestion: 1,     //是否需要答题
-          deviceLimitNum: 2  //设备限制数量
+          deviceLimitNum: 2,  //设备限制数量
+          phone: '',
+          userType: 0
         }
         this.dialogVisible = true
         this.dialogTitle = "新增会员"
@@ -237,7 +265,7 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             const params = this.form;
-            this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/member/save', params).then((response)=>{
+            this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/save', params).then((response)=>{
               const {success, message} = response.data;
               if(success) {
                 this.list(1);
@@ -260,8 +288,8 @@
         });
       },
       toEditUser(data) {
-        const {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum } = data;
-        this.form = {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum };
+        const {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType } = data;
+        this.form = {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType };
         this.dialogVisible = true;
         this.dialogTitle = "编辑会员"
       },
@@ -273,7 +301,7 @@
           inputErrorMessage: '请输入正确格式的安全校验码！'
         }).then(({ value }) => {
           const { id } = data;
-          this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/member/delete/' + id).then((response) => {
+          this.$ajax.delete(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/delete/' + id).then((response) => {
             this.$refs.pagination.size = 15;
             this.list(1);
             this.$message({
@@ -291,7 +319,7 @@
       toCheckDevice(data) {
         const { id } = data;
         this.deviceContent = [];
-        this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/member/device-list/' + id).then((response)=>{
+        this.$ajax.get(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/device-list/' + id).then((response)=>{
           const { data } = response;
           const { content } = data;
           this.deviceContent = content;
@@ -301,7 +329,7 @@
       handleDelete(data) {
         const { id } = data;
         this.deviceContent = this.deviceContent.filter(item => item.id !== id)
-        this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/member/device-delete/' + id);
+        this.$ajax.delete(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/device-delete/' + id);
       }
     }
   }

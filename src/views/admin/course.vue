@@ -247,7 +247,7 @@
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/course/list', {
           page: page,
           size: _this.$refs.pagination.size,
         }).then((response)=>{
@@ -283,7 +283,7 @@
         _this.course.categorys = categorys;
 
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/course/save', _this.course).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
@@ -308,7 +308,7 @@
           inputErrorMessage: '请输入正确格式的安全校验码！'
         }).then(({ value }) => {
           Loading.show();
-          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/course/delete/' + id).then((response)=>{
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/dev-api/business/admin/course/delete/' + id).then((response)=>{
             Loading.hide();
             let resp = response.data;
             if (resp.success) {
@@ -331,7 +331,7 @@
       allCategory() {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/category/all').then((response)=>{
           Loading.hide();
           let resp = response.data;
           _this.categorys = resp.content;
@@ -371,7 +371,7 @@
       listCategory(courseId) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list-category/' + courseId).then((res)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/course/list-category/' + courseId).then((res)=>{
           Loading.hide();
           // console.log("查找课程下所有分类结果：", res);
           let response = res.data;
@@ -389,7 +389,7 @@
       allTeacher() {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/all').then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/teacher/all').then((response)=>{
           Loading.hide();
           let resp = response.data;
           _this.teachers = resp.content;

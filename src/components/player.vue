@@ -43,7 +43,7 @@
       playVod (vod) {
         let _this = this;
         Loading.show();
-        _this.$ajax.get(process.env.VUE_APP_SERVER + '/file/admin/get-auth/' + vod).then((response)=>{
+        _this.$ajax.get(process.env.VUE_APP_SERVER + '/dev-api/file/admin/get-auth/' + vod).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {

@@ -278,7 +278,7 @@ export default {
         FILE_USE: FILE_USE,
         course: {},
         chapter: {},
-        action: process.env.VUE_APP_SERVER + '/file/admin/video',
+        action: process.env.VUE_APP_SERVER + '/dev-api/file/admin/video',
         headers: {
           Token: Tool.getLoginUser().token
         },
@@ -399,7 +399,7 @@ export default {
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/list', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/section/list', {
           page: page,
           size: _this.$refs.pagination.size,
           courseId: _this.course.id,
@@ -432,7 +432,7 @@ export default {
         _this.section.chapterId = _this.chapter.id;
 
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.section).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/section/save', _this.section).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
@@ -457,7 +457,7 @@ export default {
           inputErrorMessage: '请输入正确格式的安全校验码！'
         }).then(({ value }) => {
           Loading.show();
-          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/section/delete/' + id).then((response)=>{
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/dev-api/business/admin/section/delete/' + id).then((response)=>{
             Loading.hide();
             let resp = response.data;
             if (resp.success) {
@@ -522,7 +522,7 @@ export default {
 
       getCourse({id, title}) {
         this.courseId = id;
-        this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/section/exam/list?sectionId=' + id).then((response)=>{
+        this.$ajax.get(process.env.VUE_APP_SERVER + '/dev-api/business/admin/section/exam/list?sectionId=' + id).then((response)=>{
           const { content } = response.data;
           if(content.length) {
             this.courseForm = content;
@@ -559,7 +559,7 @@ export default {
               sectionId: this.courseId,
               questions: this.courseForm
             }
-            this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/exam/save', params).then((response)=>{
+            this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/section/exam/save', params).then((response)=>{
               this.courseDialogVisible = false;
               this.resetFields();
               this.$message({

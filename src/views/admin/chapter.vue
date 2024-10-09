@@ -137,7 +137,7 @@
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/chapter/list', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/chapter/list', {
           page: page,
           size: _this.$refs.pagination.size,
           courseId: _this.course.id
@@ -164,7 +164,7 @@
         _this.chapter.courseId = _this.course.id;
 
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/chapter/save', _this.chapter).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/chapter/save', _this.chapter).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
@@ -189,7 +189,7 @@
           inputErrorMessage: '请输入正确格式的安全校验码！'
         }).then(({ value }) => {
           Loading.show();
-          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/chapter/delete/' + id).then((response)=>{
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/dev-api/business/admin/chapter/delete/' + id).then((response)=>{
             Loading.hide();
             let resp = response.data;
             if (resp.success) {

@@ -2,7 +2,7 @@
 //https://cli.vuejs.org/zh/
 //环境变量文件的应用
 module.exports = {
-  outputDir: 'admin',                                                     //生产环境构建文件的目录，默认dist
+  outputDir: 'damin2.bahasaindo.cn',                                                     //生产环境构建文件的目录，默认dist
   assetsDir: '',                                                         //放置生成的静态资源的路径，默认''
   indexPath: 'index.html',                                               //指定生成的index.html的输出路径，默认 index.html
   filenameHashing: true,                                                 //生成的静态资源文件名包含hash利于控制缓存，默认true

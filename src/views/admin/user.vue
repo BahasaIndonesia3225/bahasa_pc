@@ -137,7 +137,7 @@
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/list', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/system/admin/user/list', {
           page: page,
           size: _this.$refs.pagination.size,
         }).then((response)=>{
@@ -167,7 +167,7 @@
 
         _this.user.password = hex_md5(_this.user.password + KEY);
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/system/admin/user/save', _this.user).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/system/admin/user/save', _this.user).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
@@ -187,7 +187,7 @@
         let _this = this;
         Confirm.show("删除用户表后不可恢复，确认删除？", function () {
           Loading.show();
-          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/system/admin/user/delete/' + id).then((response)=>{
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/dev-api/system/admin/user/delete/' + id).then((response)=>{
             Loading.hide();
             let resp = response.data;
             if (resp.success) {

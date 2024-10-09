@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
 /dist
-/admin
+/damin2.bahasaindo.cn
 
 # local env files
 .env.local
