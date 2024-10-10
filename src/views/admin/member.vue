@@ -62,6 +62,20 @@
             <el-radio :label="1">开启</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="从此节课开始" prop="choice">
+          <el-select
+            class="mySelect"
+            style="width: 100%"
+            v-model="form.choice"
+            placeholder="请选择">
+            <el-option
+              v-for="item in chapterOption"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="onCancel">取 消</el-button>
@@ -79,6 +93,7 @@
         <th>角色</th>
         <th>支付状态</th>
         <th>是否需要答题</th>
+        <th>已完成习题章节</th>
         <th>是否开通进阶课</th>
         <th>设备限制</th>
         <th>注册时间</th>
@@ -95,8 +110,13 @@
         <td>{{member.role === 1 ? '普通用户' : '超级用户'}}</td>
         <td>{{member.payStatus && member.payStatus === 1 ? "已支付" : "未支付"}}</td>
         <td>
-          <el-tag size="mini" :type="member.doQuestion === 1 ? 'unset' : 'info'">{{member.doQuestion === 1 ? '是' : '否'}}</el-tag>
+          <el-tag
+            size="mini"
+            :type="member.doQuestion === 1 ? 'unset' : 'info'">
+            {{member.doQuestion === 1 ? '是' : '否'}}
+          </el-tag>
         </td>
+        <td>{{member.title}}</td>
         <td>
           <el-tag
             size="mini"
@@ -180,7 +200,7 @@
           deviceLimitNum: 2, //设备限制数量
           choice: '',        //用户选择的习题
           phone: '',         //手机号码
-          userType: ''       //进阶课
+          userType: '',      //进阶课
         },
         rules: {
           mobile: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -195,17 +215,31 @@
           "4": 'h5',
         },
         deviceDialogVisible: false,
+        chapterOption: []
       }
     },
     mounted: function() {
       let _this = this;
       _this.$refs.pagination.size = 15;
       _this.list(1);
+      _this.getChapterOption()
       // sidebar激活样式方法一
       // this.$parent.activeSidebar("business-member-sidebar");
 
     },
     methods: {
+      getChapterOption() {
+        let _this = this;
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/section/list', {
+          "page":1,
+          "size":1500,
+          "courseId":"TYAIILon",
+          "chapterId":"NmmbLYYl"
+        }).then((response)=>{
+          const { code, content } = response.data;
+          _this.chapterOption = content.list;
+        })
+      },
       /**
        * 列表查询
        */
@@ -252,7 +286,8 @@
           doQuestion: 1,     //是否需要答题
           deviceLimitNum: 2,  //设备限制数量
           phone: '',
-          userType: 0
+          userType: 0,
+          choice: ''
         }
         this.dialogVisible = true
         this.dialogTitle = "新增会员"
@@ -288,8 +323,8 @@
         });
       },
       toEditUser(data) {
-        const {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType } = data;
-        this.form = {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType };
+        const {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice } = data;
+        this.form = {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice };
         this.dialogVisible = true;
         this.dialogTitle = "编辑会员"
       },
@@ -334,3 +369,8 @@
     }
   }
 </script>
+<style>
+  .mySelect .el-input--suffix .el-input__inner {
+    background: #ffffff !important;
+  }
+</style>
