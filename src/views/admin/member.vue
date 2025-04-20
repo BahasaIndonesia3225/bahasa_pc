@@ -13,6 +13,7 @@
     <el-dialog
       :title="dialogTitle"
       :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
       width="30%">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="用户名" prop="mobile">
@@ -30,12 +31,12 @@
             <el-radio :label="2">超级用户</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否支付" prop="payStatus">
-          <el-radio-group v-model="form.payStatus" size="mini">
-            <el-radio :label="0">未支付</el-radio>
-            <el-radio :label="1">已支付</el-radio>
-          </el-radio-group>
-        </el-form-item>
+<!--        <el-form-item label="是否支付" prop="payStatus">-->
+<!--          <el-radio-group v-model="form.payStatus" size="mini">-->
+<!--            <el-radio :label="0">未支付</el-radio>-->
+<!--            <el-radio :label="1">已支付</el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
         <el-form-item label="是否答题" prop="doQuestion">
           <el-radio-group v-model="form.doQuestion" size="mini">
             <el-radio :label="0">关闭</el-radio>
@@ -49,13 +50,13 @@
             :min="1" :max="10"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="手机号码" prop="phone">
-          <el-input
-            readonly
-            v-model="form.phone"
-            size="small">
-          </el-input>
-        </el-form-item>
+<!--        <el-form-item label="手机号码" prop="phone">-->
+<!--          <el-input-->
+<!--            readonly-->
+<!--            v-model="form.phone"-->
+<!--            size="small">-->
+<!--          </el-input>-->
+<!--        </el-form-item>-->
         <el-form-item label="开通进阶课" prop="userType">
           <el-radio-group v-model="form.userType" size="mini">
             <el-radio :label="0">关闭</el-radio>
@@ -75,6 +76,20 @@
               :value="item.id">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="授权类型" prop="licenseType">
+          <el-radio-group v-model="form.licenseType" size="small">
+            <el-radio :label="1">个人授权</el-radio>
+            <el-radio :label="2">企业授权</el-radio>
+            <el-radio :label="3">未知</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="登录方式" prop="loginType">
+          <el-radio-group v-model="form.loginType" size="small">
+            <el-radio :label="1">输入账号密码或扫码登录【H5、PC】</el-radio>
+            <el-radio :label="2">扫码登录【PC】</el-radio>
+            <el-radio :label="3">APP内登录</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -96,6 +111,7 @@
         <th>已完成习题章节</th>
         <th>是否开通进阶课</th>
         <th>设备限制</th>
+        <th>最后登录IP</th>
         <th>注册时间</th>
         <th>操作</th>
       </tr>
@@ -125,6 +141,7 @@
           </el-tag>
         </td>
         <td>{{member.deviceLimitNum}}</td>
+        <td>{{member.ip}}</td>
         <td>{{member.registerTime}}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
@@ -198,9 +215,11 @@
           payStatus: 0,      //支付状态
           doQuestion: 1,     //是否需要答题
           deviceLimitNum: 2, //设备限制数量
-          choice: '',        //用户选择的习题
           phone: '',         //手机号码
-          userType: '',      //进阶课
+          userType: 0,      //进阶课
+          choice: '',        //从此节课开始
+          licenseType: 3,    //授权类型
+          loginType: 1,      //登录方式
         },
         rules: {
           mobile: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -278,16 +297,18 @@
       addMember() {
         this.form = {
           id: "",
-          mobile: "",   //用户名
-          name: "",     //昵称
-          password: "", //密码
-          role: 1,       //角色
-          payStatus: 0,  //支付状态
+          mobile: "",        //用户名
+          name: "",          //昵称
+          password: "",      //密码
+          role: 1,           //角色
+          payStatus: 0,      //支付状态
           doQuestion: 1,     //是否需要答题
-          deviceLimitNum: 2,  //设备限制数量
-          phone: '',
-          userType: 0,
-          choice: ''
+          deviceLimitNum: 2, //设备限制数量
+          phone: '',         //手机号码
+          userType: 0,       //进阶课
+          choice: '',        //从此节课开始
+          licenseType: 3,    //授权类型
+          loginType: 1,      //登录方式
         }
         this.dialogVisible = true
         this.dialogTitle = "新增会员"
@@ -323,8 +344,8 @@
         });
       },
       toEditUser(data) {
-        const {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice } = data;
-        this.form = {id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice };
+        const { id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice, licenseType, loginType } = data;
+        this.form = { id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice, licenseType, loginType };
         this.dialogVisible = true;
         this.dialogTitle = "编辑会员"
       },

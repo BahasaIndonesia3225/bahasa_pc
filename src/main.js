@@ -29,7 +29,9 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   // console.log("返回结果：", response);
   return response;
-}, error => {});
+}, error => {
+  console.log("登录失效，请重新登录");
+});
 
 // 全局过滤器
 Object.keys(filter).forEach(key => {

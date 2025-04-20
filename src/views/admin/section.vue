@@ -187,6 +187,7 @@
     <el-dialog
       :title=courseDialogTitle
       :visible.sync="courseDialogVisible"
+      :close-on-click-modal="false"
       width="800px">
       <el-form
         :class="['courseItem', {attention: attentionArea.includes(index)}]"

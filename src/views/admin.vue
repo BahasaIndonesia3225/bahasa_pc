@@ -441,6 +441,16 @@
 
                 <b class="arrow"></b>
               </li>
+
+              <li v-show="hasResource('0204')" class="" id="business-notice-sidebar">
+                <router-link to="/business/notice">
+                  <i class="menu-icon fa fa-caret-right"></i>
+                  公告管理
+                </router-link>
+                <b class="arrow"></b>
+              </li>
+
+
               <li v-show="hasResource('0205')" class="" id="business-sms-sidebar">
                 <router-link to="/business/sms">
                   <i class="menu-icon fa fa-caret-right"></i>

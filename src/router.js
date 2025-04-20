@@ -8,6 +8,7 @@ import Chapter from "./views/admin/chapter.vue"
 import Section from "./views/admin/section.vue"
 import User from "./views/admin/user.vue"
 import Member from "./views/admin/member.vue"
+import Notice from "./views/admin/notice.vue"
 
 Vue.use(Router);
 
@@ -54,6 +55,10 @@ export default new Router({
             path: "system/user",
             name: "system/user",
             component: User,
+        }, {
+            path: "business/notice",
+            name: "business/notice",
+            component: Notice,
         }]
     }]
 })
