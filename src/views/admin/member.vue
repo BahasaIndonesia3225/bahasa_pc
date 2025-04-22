@@ -97,74 +97,87 @@
         <el-button type="primary" @click="onSubmit">确 定</el-button>
       </span>
     </el-dialog>
-
-    <table id="simple-table" class="table  table-bordered table-hover">
-      <thead>
-      <tr>
-        <th>id</th>
-        <th>用户名</th>
-        <th>昵称</th>
-        <th>手机号码</th>
-        <th>角色</th>
-        <th>支付状态</th>
-        <th>是否需要答题</th>
-        <th>已完成习题章节</th>
-        <th>是否开通进阶课</th>
-        <th>设备限制</th>
-        <th>最后登录IP</th>
-        <th>注册时间</th>
-        <th>操作</th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <tr v-for="member in members">
-        <td>{{member.id}}</td>
-        <td>{{member.mobile}}</td>
-        <td>{{member.name}}</td>
-        <td>{{member.phone || '未绑定'}}</td>
-        <td>{{member.role === 1 ? '普通用户' : '超级用户'}}</td>
-        <td>{{member.payStatus && member.payStatus === 1 ? "已支付" : "未支付"}}</td>
-        <td>
-          <el-tag
-            size="mini"
-            :type="member.doQuestion === 1 ? 'unset' : 'info'">
-            {{member.doQuestion === 1 ? '是' : '否'}}
-          </el-tag>
-        </td>
-        <td>{{member.title}}</td>
-        <td>
-          <el-tag
-            size="mini"
-            :type="member.userType === 1 ? 'unset' : 'info'">
-            {{member.userType === 1 ? '是' : '否'}}
-          </el-tag>
-        </td>
-        <td>{{member.deviceLimitNum}}</td>
-        <td>{{member.ip}}</td>
-        <td>{{member.registerTime}}</td>
-        <td>
-          <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="toCheckDevice(member)" class="btn btn-white btn-xs btn-info btn-round">
-              查看设备
-            </button>&nbsp;
-          </div>
-          <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="toDeleteUser(member)" class="btn btn-white btn-xs btn-info btn-round">
-              删除
-            </button>&nbsp;
-          </div>
-          <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="toEditUser(member)" class="btn btn-white btn-xs btn-info btn-round">
-              编辑
-            </button>&nbsp;
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
+    <el-table
+      stripe
+      border
+      :data="members"
+      style="width: 100%">
+      <el-table-column type="index" width="50"></el-table-column>
+      <el-table-column prop="id" label="ID"></el-table-column>
+      <el-table-column prop="mobile" label="用户名"></el-table-column>
+      <el-table-column prop="name" label="昵称"></el-table-column>
+      <el-table-column label="手机号码">
+        <template slot-scope="scope">
+          <span>{{ scope.row.phone || '未绑定' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="角色">
+        <template slot-scope="scope">
+          <el-tag size="mini" v-if="scope.row.role === 1" type="info">普通用户</el-tag>
+          <el-tag size="mini" v-if="scope.row.role === 2">超级用户</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="支付状态">
+        <template slot-scope="scope">
+          <el-tag size="mini" v-if="scope.row.payStatus === 1">已支付</el-tag>
+          <el-tag size="mini" v-else-if="scope.row.payStatus === 0" type="info">未支付</el-tag>
+          <el-tag size="mini" v-else type="info">未知</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="需要答题">
+        <template slot-scope="scope">
+          <el-tag size="mini" v-if="scope.row.doQuestion === 1">是</el-tag>
+          <el-tag size="mini" v-else-if="scope.row.doQuestion === 0" type="info">否</el-tag>
+          <el-tag size="mini" v-else type="info">未知</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="title" label="已完成习题章节" width="120"></el-table-column>
+      <el-table-column label="开通进阶课">
+        <template slot-scope="scope">
+          <el-tag size="mini" v-if="scope.row.userType === 1">开通</el-tag>
+          <el-tag size="mini" v-else-if="scope.row.userType === 0" type="info">未开通</el-tag>
+          <el-tag size="mini" v-else type="info">未知</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="deviceLimitNum" label="设备限制"></el-table-column>
+      <el-table-column prop="ip" label="最后登录IP" width="140"></el-table-column>
+      <el-table-column prop="registerTime" label="注册时间" width="160"></el-table-column>
+      <el-table-column label="操作" width="220">
+        <template slot-scope="scope">
+          <el-button
+            @click="toViewingRecord(scope.row)"
+            type="text"
+            size="small">
+            观看记录
+          </el-button>
+          <el-button
+            @click="toCheckDevice(scope.row)"
+            type="text"
+            size="small">
+            登录设备
+          </el-button>
+          <el-button
+            @click="toDeleteUser(scope.row)"
+            type="text"
+            size="small">
+            删除
+          </el-button>
+          <el-button
+            @click="toEditUser(scope.row)"
+            type="text"
+            size="small">
+            编辑
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="pagination-contain">
+      <pagination
+        ref="pagination"
+        v-bind:list="list"
+        v-bind:itemCount="8">
+      </pagination>
+    </div>
 
     <el-dialog
       title="登录设备信息"
@@ -188,6 +201,27 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="deviceDialogVisible = false;">取 消</el-button>
         <el-button type="primary" @click="deviceDialogVisible = false;">保 存</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      title="观看记录"
+      :visible.sync="viewingRecordDialogVisible"
+      width="800px">
+      <el-table :data="viewingRecordList" max-height="600" style="width: 100%">
+        <el-table-column
+          width="500"
+          prop="courseName"
+          label="课程名称">
+        </el-table-column>
+        <el-table-column
+          prop="creatorTime"
+          label="观看时间">
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="viewingRecordDialogVisible = false;">取 消</el-button>
+        <el-button type="primary" @click="viewingRecordDialogVisible = false;">保 存</el-button>
       </span>
     </el-dialog>
 
@@ -234,7 +268,10 @@
           "4": 'h5',
         },
         deviceDialogVisible: false,
-        chapterOption: []
+        chapterOption: [],
+
+        viewingRecordDialogVisible: false,
+        viewingRecordList: [],
       }
     },
     mounted: function() {
@@ -386,6 +423,15 @@
         const { id } = data;
         this.deviceContent = this.deviceContent.filter(item => item.id !== id)
         this.$ajax.delete(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/device-delete/' + id);
+      },
+      toViewingRecord(data) {
+        const { id } = data;
+        this.$ajax.get(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/watchHistory?memberId=' + id).then((response)=>{
+          const { data } = response;
+          const { content } = data;
+          this.viewingRecordList = content;
+          this.viewingRecordDialogVisible = true;
+        })
       }
     }
   }
@@ -393,5 +439,10 @@
 <style>
   .mySelect .el-input--suffix .el-input__inner {
     background: #ffffff !important;
+  }
+  .pagination-contain {
+    margin-top: 20px;
+    display: flex;
+    justify-content: end;
   }
 </style>
