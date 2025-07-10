@@ -84,11 +84,11 @@
             <el-radio :label="3">未知</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="登录方式" prop="loginType">
+        <el-form-item label="网页登录方式" prop="loginType">
           <el-radio-group v-model="form.loginType" size="small">
-            <el-radio :label="1">输入账号密码或扫码登录【H5、PC】</el-radio>
-            <el-radio :label="2">扫码登录【PC】</el-radio>
-            <el-radio :label="3">APP内登录</el-radio>
+            <el-radio :label="1">无限制</el-radio>
+            <el-radio :label="2">只能扫码登录PC</el-radio>
+            <el-radio :label="3">无法登录</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
