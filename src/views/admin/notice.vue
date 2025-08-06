@@ -5,7 +5,7 @@
       :model="form"
       :rules="rules"
       label-width="80px">
-      <el-form-item label="公告" prop="remark">
+      <el-form-item label="系统公告" prop="remark">
         <el-input
           :rows="6"
           type="textarea"
@@ -17,10 +17,13 @@
         <el-button size="small" @click="initData">重置</el-button>
       </el-form-item>
     </el-form>
+    <NoticeOut />
   </div>
 </template>
 <script>
+import NoticeOut from "@/views/admin/noticeOut.vue";
 export default {
+  components: { NoticeOut },
   data() {
     return {
       form: {
