@@ -450,6 +450,30 @@
                 <b class="arrow"></b>
               </li>
 
+              <li v-show="hasResource('0204')" class="" id="business-forum-sidebar">
+                <router-link to="/business/forum">
+                  <i class="menu-icon fa fa-caret-right"></i>
+                  论坛管理
+                </router-link>
+                <b class="arrow"></b>
+              </li>
+
+              <li v-show="hasResource('0204')" class="" id="business-comment-sidebar">
+                <router-link to="/business/comment">
+                  <i class="menu-icon fa fa-caret-right"></i>
+                  评论管理
+                </router-link>
+                <b class="arrow"></b>
+              </li>
+
+              <li v-show="hasResource('0204')" class="" id="business-comment-sidebar">
+                <router-link to="/business/forumRight">
+                  <i class="menu-icon fa fa-caret-right"></i>
+                  发帖评论权限
+                </router-link>
+                <b class="arrow"></b>
+              </li>
+
 
               <li v-show="hasResource('0205')" class="" id="business-sms-sidebar">
                 <router-link to="/business/sms">

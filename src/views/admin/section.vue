@@ -30,6 +30,8 @@
         <th>VOD</th>
         <th>时长</th>
         <th>收费</th>
+        <th>阿里链接</th>
+        <th>谷歌链接</th>
         <th>操作</th>
       </tr>
       </thead>
@@ -42,6 +44,12 @@
         <td>{{section.vod}}</td>
         <td>{{section.time | formatSecond}}</td>
         <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
+        <td>
+          <a v-if="section.aliCloudLink" :href="section.aliCloudLink">点击查看</a>
+        </td>
+        <td>
+          <a v-if="section.googleCloudLink" :href="section.googleCloudLink">点击查看</a>
+        </td>
       <td>
         <div class="hidden-sm hidden-xs btn-group">
           <button v-on:click="getCourse(section)" class="btn btn-xs btn-info">
@@ -170,6 +178,18 @@
                 <label class="col-sm-2 control-label">顺序</label>
                 <div class="col-sm-10">
                   <input v-model="section.sort" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">阿里链接</label>
+                <div class="col-sm-10">
+                  <input v-model="section.aliCloudLink" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">谷歌链接</label>
+                <div class="col-sm-10">
+                  <input v-model="section.googleCloudLink" class="form-control">
                 </div>
               </div>
             </form>

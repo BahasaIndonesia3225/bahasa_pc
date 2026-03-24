@@ -9,11 +9,14 @@ import Section from "./views/admin/section.vue"
 import User from "./views/admin/user.vue"
 import Member from "./views/admin/member.vue"
 import Notice from "./views/admin/notice.vue"
+import Forum from "./views/admin/forum.vue"
+import Comment from "./views/admin/comment.vue"
+import ForumRight from "./views/admin/forumRight.vue"
 
 Vue.use(Router);
 
 export default new Router({
-    mode: "history",
+    mode: "hash",
     base: process.env.BASE_URL,
     routes: [{
         path: "*",
@@ -59,6 +62,18 @@ export default new Router({
             path: "business/notice",
             name: "business/notice",
             component: Notice,
+        }, {
+          path: "business/forum",
+          name: "business/forum",
+          component: Forum,
+        }, {
+          path: "business/comment",
+          name: "business/comment",
+          component: Comment,
+        }, {
+          path: "business/forumRight",
+          name: "business/forumRight",
+          component: ForumRight,
         }]
     }]
 })

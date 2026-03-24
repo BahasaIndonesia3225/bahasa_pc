@@ -47,8 +47,14 @@
           <el-input-number
             size="small"
             v-model="form.deviceLimitNum"
-            :min="1" :max="10"
-          ></el-input-number>
+            :min="1" :max="10">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item label="需要微信校验" prop="wxFlag">
+          <el-radio-group v-model="form.wxFlag" size="mini">
+            <el-radio label="0">不需要</el-radio>
+            <el-radio label="1">需要</el-radio>
+          </el-radio-group>
         </el-form-item>
 <!--        <el-form-item label="手机号码" prop="phone">-->
 <!--          <el-input-->
@@ -254,6 +260,7 @@
           choice: '',        //从此节课开始
           licenseType: 3,    //授权类型
           loginType: 1,      //登录方式
+          wxFlag: '0'  //是否需要微信登录
         },
         rules: {
           mobile: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -346,6 +353,7 @@
           choice: '',        //从此节课开始
           licenseType: 3,    //授权类型
           loginType: 1,      //登录方式
+          wxFlag: '0'
         }
         this.dialogVisible = true
         this.dialogTitle = "新增会员"
@@ -381,8 +389,8 @@
         });
       },
       toEditUser(data) {
-        const { id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice, licenseType, loginType } = data;
-        this.form = { id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice, licenseType, loginType };
+        const { id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice, licenseType, loginType, wxFlag } = data;
+        this.form = { id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice, licenseType, loginType, wxFlag };
         this.dialogVisible = true;
         this.dialogTitle = "编辑会员"
       },
