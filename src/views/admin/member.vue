@@ -6,7 +6,7 @@
         检索
       </button>
       <button class="btn btn-white btn-default btn-round" @click="addMember" style="margin-right: 10px;">新增会员</button>
-      <button class="btn btn-white btn-default btn-round" @click="exportMember" style="margin-right: 10px;">导出会员</button>
+      <button class="btn btn-white btn-default btn-round" @click="exportAllMember" style="margin-right: 10px;">导出会员</button>
       <span>超级用户不受单点登录的限制、不受习题的限制</span>
     </p>
 
@@ -148,8 +148,14 @@
       <el-table-column prop="deviceLimitNum" label="设备限制"></el-table-column>
       <el-table-column prop="ip" label="最后登录IP" width="140"></el-table-column>
       <el-table-column prop="registerTime" label="注册时间" width="160"></el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column label="操作" width="240">
         <template slot-scope="scope">
+          <el-button
+            @click="toExportUser(scope.row)"
+            type="text"
+            size="small">
+            导出
+          </el-button>
           <el-button
             @click="toViewingRecord(scope.row)"
             type="text"
@@ -321,7 +327,9 @@
 
         })
       },
-      exportMember() {
+
+      //导出全部用户
+      exportAllMember() {
         this.$ajax.post(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/export', {}, {
           headers: {
             'Content-Type': 'application/json; application/octet-stream'
@@ -330,7 +338,7 @@
         }).then((res)=>{
           const aLink = document.createElement('a')
           var blob = new Blob([res.data], { type: "application/vnd.ms-excel;charset=UTF-8" })
-          var fileName = "会员信息"
+          var fileName = "全部会员信息"
           aLink.href = URL.createObjectURL(blob)
           aLink.setAttribute('download', fileName) // 设置下载文件名称
           document.body.appendChild(aLink)
@@ -393,6 +401,26 @@
         this.form = { id, mobile, name, password, role, payStatus, doQuestion, deviceLimitNum, phone, userType, choice, licenseType, loginType, wxFlag };
         this.dialogVisible = true;
         this.dialogTitle = "编辑会员"
+      },
+      //导出用户
+      toExportUser(data) {
+        const { id, name } = data;
+        this.$ajax.get(process.env.VUE_APP_SERVER + '/dev-api/business/admin/member/exportMember', { params: { userId: id } }, {
+          headers: {
+            'Content-Type': 'application/json; application/octet-stream'
+          },
+          responseType: 'arraybuffer'
+        }).then((res)=>{
+          const aLink = document.createElement('a')
+          var blob = new Blob([res.data], { type: "application/vnd.ms-excel;charset=UTF-8" })
+          var fileName = name + "会员信息"
+          aLink.href = URL.createObjectURL(blob)
+          aLink.setAttribute('download', fileName) // 设置下载文件名称
+          document.body.appendChild(aLink)
+          aLink.click()
+          document.body.appendChild(aLink)
+        })
+
       },
       toDeleteUser(data) {
         this.$prompt('确定删除该用户？请输入安全码校验。', '提示', {
